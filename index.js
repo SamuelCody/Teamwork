@@ -4,7 +4,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
 const errorHandler = require("./handlers/error");
+const { loginRequired } = require("./middleware/auth");
 const auth = require("./routes/auth");
+const gif = require("./routes/gif");
 
 mongoose.set("debug", true);
 mongoose.connect(process.env.DB_URI, {
@@ -26,6 +28,7 @@ app.use(
 
 //all routes will be here- come later
 app.use("/api/v1", auth);
+app.use("/api/v1", loginRequired, gif);
 
 app.use(function (req, res, next) {
   let err = new Error("Not found");

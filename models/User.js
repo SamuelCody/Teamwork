@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const Gif = require("./Gif");
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -39,6 +40,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "employee",
   },
+  gifs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Gif",
+    },
+  ],
 });
 
 userSchema.pre("save", async function (next) {
