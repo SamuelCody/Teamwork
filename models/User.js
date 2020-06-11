@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Gif = require("./Gif");
+const Article = require("./Article");
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -44,6 +45,12 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Gif",
+    },
+  ],
+  articles: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Article",
     },
   ],
 });
