@@ -30,6 +30,7 @@ exports.createGif = async function (req, res, next) {
             let gif = await Gif.create({
               title: req.body.title,
               image: uploaded.url,
+              imageId: uploaded.public_id,
               user: decoded.id,
             });
             let foundUser = await User.findById(decoded.id);
@@ -58,6 +59,40 @@ exports.createGif = async function (req, res, next) {
     return next({
       status: 400,
       message: "GIF image failed to post",
+    });
+  }
+};
+
+//delete a gif
+exports.deleteGif = async function (req, res, next) {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, process.env.SECRET_KEY, async function (err, decoded) {
+      let gif = await Gif.findById(req.params.gifId);
+      if (decoded.id == gif.user) {
+        await cloudinary.uploader.destroy(gif.imageId, async function (
+          err,
+          result
+        ) {
+          await gif.remove();
+          return res.status(200).json({
+            status: "success",
+            data: {
+              message: "Gif post successfully deleted",
+            },
+          });
+        });
+      } else {
+        return next({
+          status: 401,
+          message: "User Unauthorized",
+        });
+      }
+    });
+  } catch (err) {
+    return next({
+      status: 401,
+      message: "Gif failed to delete",
     });
   }
 };
