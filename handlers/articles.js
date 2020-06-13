@@ -77,3 +77,32 @@ exports.editArticle = async function (req, res, next) {
     });
   }
 };
+
+//delete an article
+exports.deleteArticle = async function (req, res, next) {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, process.env.SECRET_KEY, async function (err, decoded) {
+      let article = await Article.findById(req.params.articleId);
+      if (decoded.id == article.user) {
+        await article.remove();
+        return res.status(200).json({
+          status: "success",
+          data: {
+            message: "Article successfully deleted",
+          },
+        });
+      } else {
+        return next({
+          status: 401,
+          message: "User Unauthorized",
+        });
+      }
+    });
+  } catch (err) {
+    return next({
+      status: 401,
+      message: "Article failed to delete",
+    });
+  }
+};
