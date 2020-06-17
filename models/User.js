@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Gif = require("./Gif");
 const Article = require("./Article");
+const Comment = require("./Comment");
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -51,6 +52,12 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Article",
+    },
+  ],
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
     },
   ],
 });
