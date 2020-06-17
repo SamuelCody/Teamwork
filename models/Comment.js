@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("./User");
 const Article = require("./Article");
+const Gif = require("./Gif");
 
 const commentSchema = new mongoose.Schema(
   {
@@ -14,6 +15,10 @@ const commentSchema = new mongoose.Schema(
     articleId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Article",
+    },
+    gifId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Gif",
     },
   },
   {
