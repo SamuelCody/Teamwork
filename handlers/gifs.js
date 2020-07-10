@@ -96,3 +96,28 @@ exports.deleteGif = async function (req, res, next) {
     });
   }
 };
+
+//get a gif
+exports.getGif = async function (req, res, next) {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, process.env.SECRET_KEY, async function (err, decoded) {
+      let gif = await Gif.findById(req.params.gifId).populate("comments");
+      return res.status(200).json({
+        status: "success",
+        data: {
+          id: gif.id,
+          createdOn: gif.createdAt,
+          title: gif.title,
+          url: gif.image,
+          comments: gif.comments,
+        },
+      });
+    });
+  } catch (err) {
+    return next({
+      status: 401,
+      message: "Cannot get gif",
+    });
+  }
+};
