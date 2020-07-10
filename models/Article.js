@@ -21,6 +21,18 @@ const articleSchema = new mongoose.Schema(
   }
 );
 
+articleSchema.pre("remove", async function (next) {
+  try {
+    const User = require("./User");
+    let user = await User.findById(this.user);
+    user.articles.remove(this._id);
+    await user.save();
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
 const Article = new mongoose.model("Article", articleSchema);
 
 module.exports = Article;
