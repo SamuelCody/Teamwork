@@ -7,6 +7,7 @@ const errorHandler = require("./handlers/error");
 const { loginRequired } = require("./middleware/auth");
 const auth = require("./routes/auth");
 const gif = require("./routes/gif");
+const article = require("./routes/article");
 
 mongoose.set("debug", true);
 mongoose.connect(process.env.DB_URI, {
@@ -29,6 +30,7 @@ app.use(
 //all routes will be here- come later
 app.use("/api/v1", auth);
 app.use("/api/v1", loginRequired, gif);
+app.use("/api/v1", loginRequired, article);
 
 app.use(function (req, res, next) {
   let err = new Error("Not found");
