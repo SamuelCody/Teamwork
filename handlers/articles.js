@@ -106,3 +106,30 @@ exports.deleteArticle = async function (req, res, next) {
     });
   }
 };
+
+//get an article
+exports.getArticle = async function (req, res, next) {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, process.env.SECRET_KEY, async function (err, decoded) {
+      let article = await Article.findById(req.params.articleId).populate(
+        "comments"
+      );
+      return res.status(200).json({
+        status: "success",
+        data: {
+          id: article.id,
+          createdOn: article.createdAt,
+          title: article.title,
+          article: article.article,
+          comments: article.comments,
+        },
+      });
+    });
+  } catch (err) {
+    return next({
+      status: 401,
+      message: "Cannot get article",
+    });
+  }
+};
